@@ -9,4 +9,4 @@ Keys are:
 SPACE : New game , 
 M     : Sound mute/unmute , 
 ESC   : Quit ,
-S or N: To draw (or not to draw) a new card, when asked
+S or N: To draw (or not to draw) a new card when asked

@@ -6,6 +6,6 @@ Game language is Italian.
 
 Keys are:
 
-SPACE : New game
-M     : Sound mute/unmute
+SPACE : New game , 
+M     : Sound mute/unmute , 
 ESC   : Quit

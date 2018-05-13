@@ -694,3 +694,9 @@
 /processorParam:TextureFormat=Color
 /build:deck_background.png
 
+#begin entrtanr.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:entrtanr.ogg
+

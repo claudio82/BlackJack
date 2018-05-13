@@ -1,7 +1,7 @@
-﻿using Commons.Music.Midi;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +17,6 @@ namespace BlackJack
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        // The external midi player
-        MidiPlayer player;
-
-        static String musicToPlay = "entrtanr.mid";
 
         float screenWidth;
         float screenHeight;
@@ -34,6 +30,7 @@ namespace BlackJack
         Texture2D startGameSplash;
         SpriteFont stateFont;
         SpriteFont fontScoreP1, fontScoreP2;
+        Song music;
 
         int scoreP1, scoreP2;
         private bool gameStarted;
@@ -137,18 +134,18 @@ namespace BlackJack
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-            // TODO: use this.Content to load your game content here            
-            PlayMidiFile(System.IO.Directory.GetCurrentDirectory() +
-                System.IO.Path.DirectorySeparatorChar +
-                Content.RootDirectory +
-                System.IO.Path.DirectorySeparatorChar +
-                musicToPlay);
-            
+
+            // TODO: use this.Content to load your game content here
             startGameSplash = Content.Load<Texture2D>("start-splash");
             stateFont = Content.Load<SpriteFont>("GameState");
             fontScoreP1 = Content.Load<SpriteFont>("ScoreP1");
             fontScoreP2 = Content.Load<SpriteFont>("ScoreP2");
+            music = Content.Load<Song>("entrtanr");
+            
+            //  Uncomment the following line will also loop the song
+            //  MediaPlayer.IsRepeating = true;
+            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
+            MediaPlayer.Play(music);
 
             //// Create all cards
             for (int i = 1; i < 14; i++)
@@ -176,12 +173,7 @@ namespace BlackJack
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-
-            if (player != null)
-            {
-                player.Finished -= Player_Finished;
-                player.Dispose();
-            }
+            MediaPlayer.MediaStateChanged -= MediaPlayer_MediaStateChanged;
         }
 
         /// <summary>
@@ -637,46 +629,19 @@ namespace BlackJack
             return m_random.Next(min, max);
         }
 
-        private void PlayMidiFile(string file)
+        private void MediaPlayer_MediaStateChanged(object sender, EventArgs e)
         {
-            // use external player to play midi
-            try
-            {
-                var access = MidiAccessManager.Default;
-                var output = access.OpenOutputAsync(access.Outputs.Last().Id).Result;
-                var music = MidiMusic.Read(System.IO.File.OpenRead(file));
-                player = new MidiPlayer(music, output);
-                player.Finished += Player_Finished;
-
-                //player.EventReceived += (MidiEvent e) => {                
-                //if (e.EventType == MidiEvent.Program)
-                //    Console.WriteLine($"Program changed: Channel:{e.Channel} Instrument:{e.Msb}");
-                //};
-
-                player.PlayAsync();
-                //while (player.State != PlayerState.Stopped) { }
-                //Console.WriteLine("Type [CR] to stop.");
-                //Console.ReadLine();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Open Midi Error : " + ex.Message);
-            }
+            if (MediaPlayer.State == MediaState.Stopped)
+                MediaPlayer.Play(music);
         }
-        
+
         private void MuteUnmuteSound()
         {
-            if (player.State == PlayerState.Playing)
-                player.PauseAsync();
-            else if (player.State == PlayerState.Paused)
-                player.PlayAsync();
+            if (MediaPlayer.State == MediaState.Playing)
+                MediaPlayer.Pause();
+            else if (MediaPlayer.State == MediaState.Paused)
+                MediaPlayer.Resume();         
         }
-
-        private void Player_Finished()
-        {
-            // restart the music
-            player.StartLoop();
-        }
-
+        
     }
 }

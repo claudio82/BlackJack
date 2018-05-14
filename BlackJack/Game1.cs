@@ -122,7 +122,7 @@ namespace BlackJack
             // the delayed action
             cpuHandAction =
                     new DelayedAction(TurnOpponentCards, _delay);
-
+            
             base.Initialize();
         }
 
@@ -205,10 +205,7 @@ namespace BlackJack
                 if (state.IsKeyDown(Keys.Space)
                     & !previousState.IsKeyDown(Keys.Space))
                 {
-                    StartGame();
-                    gameStarted = true;
-                    spaceDown = true;
-                    gameOver = false;
+                    PrepareNewGame();                    
                 }
                 previousState = state;
                 return;
@@ -233,10 +230,11 @@ namespace BlackJack
                         p1Hand.GetCard(i).setTurned(false);
                     for (i = 0; i < p2Hand.GetNumCardsInHand(); i++)
                         p2Hand.GetCard(i).setTurned(false);
-
+                    
                     gameOver = true;
                     spaceDown = false;
-                    gameStarted = false;
+
+                    PrepareNewGame();                    
                 }
                 else
                 {
@@ -603,6 +601,17 @@ namespace BlackJack
             }
             // show opponent's score
             showP2Score = true;
+        }
+
+        /// <summary>
+        /// starts a new game
+        /// </summary>
+        private void PrepareNewGame()
+        {
+            StartGame();
+            gameStarted = true;
+            spaceDown = true;
+            gameOver = false;
         }
 
         public static int NextZ()

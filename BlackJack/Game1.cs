@@ -16,7 +16,7 @@ namespace BlackJack
         const String GAME_TITLE = "BLACK JACK";
 
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        internal SpriteBatch spriteBatch;
 
         float screenWidth;
         float screenHeight;
@@ -452,16 +452,16 @@ namespace BlackJack
                         winner += DRAWGAME_MSG;
                         isAskingToDraw = false;
                     }
-                    else if (scoreP1 < scoreP2)
-                    {
-                        winner += P2_WINS_MSG;
-                        isAskingToDraw = false;
-                    }
-                    else
-                    {
-                        winner += P1_WINS_MSG;
-                        isAskingToDraw = false;
-                    }
+                    //else if (scoreP1 < scoreP2)
+                    //{
+                    //    winner += P2_WINS_MSG;
+                    //    isAskingToDraw = false;
+                    //}
+                    //else
+                    //{
+                    //    winner += P1_WINS_MSG;
+                    //    isAskingToDraw = false;
+                    //}
                 }
             }
             else
